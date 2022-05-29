@@ -1,0 +1,9 @@
+services:
+  derbybot:
+    build: .
+    volumes:
+      - ./src:/app
+    container_name: derbybot
+    environment:
+      - BOT_TOKEN=$BOT_TOKEN
+
