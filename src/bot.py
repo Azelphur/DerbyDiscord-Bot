@@ -54,13 +54,6 @@ if __name__ == "__main__":
         help="Discord bot token, or set BOT_TOKEN environment variable.",
         default=os.environ.get("BOT_TOKEN"),
     )
-    parser.add_argument(
-        "-t",
-        "--bot-token",
-        type=str,
-        help="Discord bot token, or set BOT_TOKEN environment variable.",
-        default=os.environ.get("BOT_TOKEN"),
-    )
     args = parser.parse_args()
 
     if not args.bot_token:
