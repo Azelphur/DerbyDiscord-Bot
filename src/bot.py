@@ -20,12 +20,16 @@ console_handler.setFormatter(
 logger.addHandler(console_handler)
 bot = discord.Bot()
 
+
 @bot.event
 async def on_application_command_error(ctx, error):
     if isinstance(error, commands.CommandOnCooldown):
         await ctx.respond(
             f"This command is on cooldown for {naturaldelta(error.retry_after)}"
         )
+        return
+    if isinstance(error, commands.CommandError):
+        await ctx.respond(error)
         return
     logger.critical(error)
     raise error  # re-raise the error so all the errors will still show up in console
@@ -45,7 +49,7 @@ if __name__ == "__main__":
         "--log-level",
         help="Logging level.",
         choices=["CRITICAL", "ERROR", "WARNING", "INFO", "DEBUG"],
-        default=os.environ.get("BOT_LOG_LEVEL")
+        default=os.environ.get("BOT_LOG_LEVEL"),
     )
     parser.add_argument(
         "-t",
@@ -57,7 +61,9 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if not args.bot_token:
-        parser.error("Specify any of -t, --bot-token or BOT_TOKEN environment variable.")
+        parser.error(
+            "Specify any of -t, --bot-token or BOT_TOKEN environment variable."
+        )
         sys.exit(1)
 
     console_handler.setLevel(args.log_level if args.log_level else "INFO")
